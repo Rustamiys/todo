@@ -6,7 +6,14 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "serve:ssr:todo": "node dist/todo/server/server.mjs"
+    "serve:ssr:todo": "node dist/todo/server/server.mjs",
+    "lint": "gts lint",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm.cmd run compile",
+    "pretest": "npm.cmd run compile",
+    "posttest": "npm.cmd run lint"
   },
   "private": true,
   "dependencies": {
@@ -20,6 +27,8 @@
     "@angular/platform-server": "^17.3.0",
     "@angular/router": "^17.3.0",
     "@angular/ssr": "^17.3.0",
+    "devextreme": "23.2.5",
+    "devextreme-angular": "23.2.5",
     "express": "^4.18.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
@@ -31,6 +40,7 @@
     "@angular/compiler-cli": "^17.3.0",
     "@types/express": "^4.17.17",
     "@types/node": "^18.18.0",
+    "gts": "^5.2.0",
     "typescript": "~5.4.2"
   }
 }

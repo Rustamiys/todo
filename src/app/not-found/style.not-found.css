@@ -1,0 +1,14 @@
+.all-item{
+    font-size: 60px;
+    text-align: center;
+    font-weight: bold;
+    flex-direction: column;
+}
+
+.btn{
+    border: none;
+    background-color: inherit;
+    font-weight: bold;
+    font-size: 50px;
+    cursor: pointer;
+}
