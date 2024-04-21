@@ -2,12 +2,13 @@ import { FormsModule }   from "@angular/forms";
 import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { Component } from '@angular/core';
 import notify from 'devextreme/ui/notify';
+import { CommonModule } from "@angular/common"; 
 
 
 @Component({
   selector: 'app-editcard',
   standalone: true,
-  imports: [DxButtonModule, FormsModule],
+  imports: [CommonModule, DxButtonModule, FormsModule],
   templateUrl: './index.editcard.html',
   styleUrls: ['./style.editcard.css']
 })
