@@ -1,31 +1,41 @@
-<div>
+<div class="col-item">
+  <div class="row-item" style="height: 30px;background-color: white; justify-content: space-between;">
     <dx-button
-    stylingMode="text"
-    text="Back"
-    type="normal"
-    [width]="120"
-    (onClick)="returnHomePage()">
-  </dx-button>
-  Создание задачи
+      icon="back"
+      stylingMode="text"
+      text="НАЗАД"
+      type="normal"
+      [width]="150"
+      [height]="50"
+      (onClick)="goToHomePage()">
+    </dx-button>
+    <dx-button
+      stylingMode="text"
+      text="СОЗДАНИЕ ЗАДАЧИ"
+      type="normal"
+      [width]="200"
+      [height]="50"
+      (onClick)="goToHomePage()">
+    </dx-button>
+  </div>
+  <div style="height: 800px; background-color:#d7d7d7;">
+  </div>
 
-</div>
+  <div class="row-item" style="justify-content: flex-end; height: 30px;background-color: white;">
+    <dx-button
+            stylingMode="outlined"
+            text="ОТМЕНИТЬ"
+            type="normal"
+            [width]="120"
+          >
+    </dx-button>
+    <dx-button
+          stylingMode="contained"
+          text="СОХРАНИТЬ"
+          type="default"
+          [width]="120"
+        >
+    </dx-button>
+  </div>
 
-<div style="background-color:rgb(215,215,215); height: 1000px;">
-
-</div>
-
-<div>
-    <button
-    stylingMode="text"
-    text="Xui"
-    type="normal"
-    (onClick)="returnHomePage()">
-  </button>
-  <dx-button
-  stylingMode="text"
-  text="Text"
-  type="normal"
-  [width]="120"
-  (onClick)="returnHomePage()">
-</dx-button>
 </div>

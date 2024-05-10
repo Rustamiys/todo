@@ -1,9 +1,9 @@
 import { FormsModule }   from "@angular/forms";
 import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { Component } from '@angular/core';
-import notify from 'devextreme/ui/notify';
 import { CommonModule } from "@angular/common"; 
-
+import { Router } from '@angular/router';
+import { DataService } from "../data.service";
 
 @Component({
   selector: 'app-editcard',
@@ -14,25 +14,16 @@ import { CommonModule } from "@angular/common";
 })
 
 
+
 export class EditcardComponent {
-  returnHomePage() : void {
+  constructor(
+    private router: Router,
+    private dataService: DataService
+  ) { }
+  ngOnInit(): void{
+
   }
-  capitalize = (txt : any) : Text => txt.charAt(0).toUpperCase() + txt.slice(1);
-  click = (e : any) : void => {
-    const buttonText = e.component.option('text');
-    notify(`The ${this.capitalize(buttonText)} button was clicked`);
-  };
+  async goToHomePage() {
+    await this.router.navigate(['/home'])
+  }
 }
-
-// @NgModule({
-//   imports: [
-//     BrowserModule,
-//     DxButtonModule,
-//   ],
-//   declarations: [EditcardComponent],
-//   bootstrap: [EditcardComponent],
-// })
-
-// export class EditModule { }
-
-// platformBrowserDynamic().bootstrapModule();

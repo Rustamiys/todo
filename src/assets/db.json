@@ -1,0 +1,13 @@
+{
+    "tasks" : [
+        {
+            "id" : 1,
+            "priority" : 1,
+            "value" : "First Task",
+            "date_start" : "",
+            "date_finish" : "",
+            "status" : 1,
+            "employes" : ["Иванов Иван Иванович"]
+        }
+    ]
+}
