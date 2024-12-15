@@ -1,0 +1,35 @@
+<div style="height: 850px; background-color:#d7d7d7;">
+    <br>
+    <dx-data-grid
+      [dataSource]="tasks"
+      [columns]="columns"
+      [showRowLines]="true"
+      [showColumnLines]="true"
+      [showBorders]="true"
+      [allowColumnReordering]="true"
+      [paging]="{ pageSize: 20 }"
+      class="task-table"
+      (onRowUpdated)="taskUpdate($event)"
+      (onRowRemoving)="taskRemove($event)"
+    >
+    <dxo-filter-row [visible]="true" [applyFilter]="true"></dxo-filter-row>
+    <dxo-paging [enabled]="true"></dxo-paging>
+    <dxo-editing
+        mode="row"
+        [allowUpdating]="true"
+        [allowDeleting]="true"
+    >
+    </dxo-editing>
+    </dx-data-grid>
+</div> 
+<br>
+<div class="row-item" style="justify-content: center; height: 30px;background-color: rgb(255, 255, 255);">
+    <dx-button
+            stylingMode="outlined"
+            text="ДОБАВИТЬ ЗАДАЧУ"
+            type="normal"
+            [width]="'100%'"
+            (onClick)="goToEditCardPage()"
+          >
+    </dx-button>
+  </div>

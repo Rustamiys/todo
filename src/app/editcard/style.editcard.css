@@ -13,3 +13,44 @@
   gap : 1rem;
   width: 100%;
 }
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group-row {
+  display: flex;
+  gap: 20px;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.invalid {
+  border: 1px solid red;
+}
+
+.required {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+}
+
+.participant-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.participant-item:hover {
+  background-color: #f0f0f0;
+}
