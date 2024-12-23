@@ -1,15 +1,5 @@
+<app-not-found></app-not-found>
 <div class="col-item">
-  <div class="row-item" style="height: 30px;background-color: white; justify-content: space-between;">
-    <dx-button
-      icon="back"
-      stylingMode="text"
-      text="НАЗАД"
-      type="normal"
-      [width]="150"
-      [height]="50"
-      (onClick)="goToHomePage()">
-    </dx-button>
-  </div>
   <div style="height: 800px; background-color:#d7d7d7;">
     <br>
     <div class="form-container">
@@ -17,10 +7,10 @@
         <dx-select-box 
           [items]="priorities" 
           placeholder="Выберите значение ...." 
-          [(value)]="selectedPriority" 
+          [(value)]="task.priority" 
           [showClearButton]="true">
         </dx-select-box>
-        <div *ngIf="!selectedPriority" class="error-message">
+        <div *ngIf="!task.priority" class="error-message">
           Поле не может быть пустым
         </div>
         <label class="required">Приоритет *</label>
@@ -29,12 +19,12 @@
       <div class="form-item">
         <dx-text-box 
           placeholder="Введите значение ...." 
-          [(value)]="taskName" 
-          [isValid]="taskName && taskName.trim().length > 0 ? true : false"
+          [(value)]="task.task" 
+          [isValid]="task.task && task.task.trim().length > 0 ? true : false"
           [validationMessageMode]="'always'"
-          [class.invalid]="!taskName || !taskName.trim().length">
+          [class.invalid]="!task.task || !task.task.trim().length">
         </dx-text-box>
-        <div *ngIf="!taskName || !taskName.trim().length" class="error-message">
+        <div *ngIf="!task.task || !task.task.trim().length" class="error-message">
           Поле не может быть пустым
         </div>
         <label class="required">Задача *</label>
@@ -45,15 +35,15 @@
         <div class="form-group">
           <dx-date-box
             type="date"
-            [(value)]="start_date"
+            [(value)]="task.startDate"
             [displayFormat]="'dd.MM.yyyy'"
             [inputAttr]="{ 'aria-label': 'Date' }"
           >
           </dx-date-box>
-          <div *ngIf="start_date && finish_date && start_date > finish_date" class="error-message">            
+          <div *ngIf="task.startDate && task.endDate && task.startDate > task.endDate" class="error-message">            
             Дата начала не может быть позже даты завершения
           </div>
-          <div *ngIf="!start_date">
+          <div *ngIf="!task.startDate">
             <label class="error-message">Дата начала должна быть заполнена*</label>
           </div>
           <label class="required">Дата начала *</label>
@@ -62,15 +52,15 @@
         <div class="form-group">
           <dx-date-box
             type="date"
-            [(value)]="finish_date"
+            [(value)]="task.endDate"
             [displayFormat]="'dd.MM.yyyy'"
             [inputAttr]="{ 'aria-label': 'Date' }"
           >
           </dx-date-box>
-          <div *ngIf="start_date && finish_date && start_date > finish_date" class="error-message">            
+          <div *ngIf="task.startDate && task.endDate && task.startDate > task.endDate" class="error-message">            
             Дата начала не может быть позже даты завершения
           </div>
-          <div *ngIf="!finish_date">
+          <div *ngIf="!task.endDate">
             <label class="error-message">Дата завершения должна быть заполнена*</label>
           </div>
           <label class="required">Дата завершения *</label>
@@ -81,10 +71,10 @@
         <dx-select-box 
           [items]="statuses" 
           placeholder="Выберите значение ...." 
-          [(value)]="selectedStatus" 
+          [(value)]="task.status" 
           [showClearButton]="true">
         </dx-select-box>
-        <div *ngIf="!selectedStatus" class="error-message">
+        <div *ngIf="!task.status" class="error-message">
           Поле не может быть пустым
         </div>
         <label class="required">Статус *</label>
@@ -104,7 +94,7 @@
         </div>
         <br>
         <dx-data-grid 
-          [(dataSource)]="participants" 
+          [(dataSource)]="task.participants" 
           [showBorders]="true" 
           [paging]="{ pageSize: 5 }"
           [allowColumnReordering]="true">
@@ -119,9 +109,6 @@
           caption="Список участников события">
         </dxi-column>
       </dx-data-grid>
-        <div *ngIf="!participants" class="error-message">
-          Должны быть выбраны участники
-        </div>
         <dx-popup 
           [(visible)]="isPopupVisible"
           [width]="400"
@@ -142,15 +129,19 @@
             [(value)]="searchTerm"
             (onValueChanged)="filterParticipants($event)">
           </dx-text-box>
-          <ul>
-            <li 
-              *ngFor="let participant of filteredParticipants" 
-              (click)="addParticipant(participant)"
-              class="participant-item">
-              {{ participant.name }}
-            </li>
-          </ul>
-        </div>        
+          <div *ngFor="let participant of filteredParticipants" class="participant-item">
+            
+            <dx-button (onClick)="addParticipant(participant)">
+              id: {{ participant.id }} Имя: {{ participant.name }}
+            </dx-button>
+            <div>-------</div>
+            <dx-button
+              stylingMode="text"
+              icon="trash"
+              (onClick)="deleteParticipant(participant.id)">
+            </dx-button>                    
+          </div>
+        </div>
       </dx-popup>
       <dx-popup 
         [(visible)]="isCreateParticipantPopupVisible"
@@ -172,7 +163,7 @@
           <button (click)="createParticipant()" class="btn btn-success mt-2">
             Создать
           </button>
-          <button (click)="isCreateParticipantPopupVisible = false" class="btn btn-secondary mt-2">
+          <button (click)="isCreateParticipantPopupVisible = false; openPopup()" class="btn btn-secondary mt-2">
             Отмена
           </button>
         </div>
@@ -187,6 +178,7 @@
             text="ОТМЕНИТЬ"
             type="normal"
             [width]="120"
+            (onClick)="cancel()"
           >
     </dx-button>
     <dx-button

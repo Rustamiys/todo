@@ -6,6 +6,7 @@ import { BrowserModule, provideClientHydration } from '@angular/platform-browser
 
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { HttpClient } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes),
@@ -13,6 +14,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(HttpClient),
     importProvidersFrom(BrowserModule),
     importProvidersFrom(BrowserAnimationsModule),
-    provideAnimations()
+    provideAnimations(), provideAnimationsAsync()
   ]
 };

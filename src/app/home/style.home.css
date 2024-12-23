@@ -15,3 +15,24 @@ dx-data-grid {
 	gap : 1rem;
 	width: 100%;
 }  
+
+.floating-card {
+	position: absolute;
+	z-index: 1000;
+	background-color: white;
+	width: 300px;
+	height: 300px;
+	padding: 20px;
+  
+	/* Установка скролла */
+	overflow: auto;
+  
+	/* Добавляем перенос текста */
+	word-wrap: break-word; /* Для длинных слов */
+	white-space: normal;   /* Убедимся, что текст переносится по строкам */
+  }
+  .participant-item {
+	margin-top: 5px;
+	overflow-wrap: break-word; /* Перенос длинных слов */
+  }
+  

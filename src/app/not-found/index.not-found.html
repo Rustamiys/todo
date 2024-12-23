@@ -1,5 +1,29 @@
 <div class="all-item">
-  <p>NO SUCH PAGE</p>
-  <button class="btn" (click)="goToHomePage()">Домашняя страница</button>
-  <button class="btn" (click)="goToEditCardPage()">Редактирование карточки участника</button>
+  <img src="../../assets/месси.ico" class="icon-size">
+  <dx-button
+    stylingMode="text"
+    text="СПИСОК ЗАДАЧ"
+    type="normal"
+    [width]="300"
+    [height]="50"
+    (onClick)="goToHomePage()">
+  </dx-button>
+  <dx-button
+    stylingMode="text"
+    text="ДОБАВИТЬ ЗАДАЧУ"
+    type="normal"
+    [width]="300"
+    [height]="50"
+    (onClick)="goToEditCardPage()">
+  </dx-button>
+  <div style="gap: 20px;">
+    <dx-button
+      stylingMode="text"
+      text="Выйти из аккаунта"
+      type="normal"
+      [width]="300"
+      [height]="50"
+      (onClick)="logout()">
+    </dx-button>
+  </div>
 </div>

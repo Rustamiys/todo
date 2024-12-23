@@ -1,16 +1,17 @@
+<app-not-found></app-not-found>
 <div style="height: 850px; background-color:#d7d7d7;">
     <br>
     <dx-data-grid
-      [dataSource]="tasks"
-      [columns]="columns"
+      [dataSource]="dataSource"
       [showRowLines]="true"
       [showColumnLines]="true"
       [showBorders]="true"
       [allowColumnReordering]="true"
       [paging]="{ pageSize: 20 }"
       class="task-table"
-      (onRowUpdated)="taskUpdate($event)"
+      (onEditingStart)="taskUpdate($event)"
       (onRowRemoving)="taskRemove($event)"
+      (onCellDblClick)="taskInfo($event)"
     >
     <dxo-filter-row [visible]="true" [applyFilter]="true"></dxo-filter-row>
     <dxo-paging [enabled]="true"></dxo-paging>
@@ -20,16 +21,76 @@
         [allowDeleting]="true"
     >
     </dxo-editing>
-    </dx-data-grid>
-</div> 
-<br>
-<div class="row-item" style="justify-content: center; height: 30px;background-color: rgb(255, 255, 255);">
-    <dx-button
-            stylingMode="outlined"
-            text="ДОБАВИТЬ ЗАДАЧУ"
-            type="normal"
-            [width]="'100%'"
-            (onClick)="goToEditCardPage()"
+    <dxi-column 
+      dataField="id" 
+      caption="ID" 
+      dataType="number">
+    </dxi-column>
+    <dxi-column 
+      dataField="priority" 
+      caption="Приоритет задачи" 
+      dataType="string">
+    </dxi-column>
+    <dxi-column 
+      dataField="task" 
+      caption="Задача" 
+      dataType="string">
+    </dxi-column>
+    <dxi-column 
+      dataField="startDate" 
+      caption="Дата начала" 
+      dataType="date" 
+      format="dd/MM/yyyy">
+    </dxi-column>
+    <dxi-column 
+      dataField="endDate" 
+      caption="Дата завершения" 
+      dataType="date" 
+      format="dd/MM/yyyy">
+    </dxi-column>
+    <dxi-column 
+      dataField="status" 
+      caption="Статус задачи" 
+      dataType="string">
+    </dxi-column>
+    <dxi-column 
+      dataField="participants" 
+      caption="Участники" 
+      dataType="string" 
+      [calculateCellValue]="formatParticipants">
+    </dxi-column>
+    <dxi-column type="buttons">
+        <dxi-button
+          name="edit"
+          icon="rename"
           >
-    </dx-button>
-  </div>
+        </dxi-button>
+        <dxi-button
+          name="delete"
+          icon="remove">
+        </dxi-button>
+    </dxi-column>
+    </dx-data-grid>
+    <div *ngIf="isCardVisible">
+      <mat-card class="floating-card" [ngStyle]="cardPosition">
+        <div class="row-item">
+          <h3>Карточка задачи</h3>
+          <dx-button
+            [width]="40"
+            icon="info"
+            (onClick)="taskShowCard()"
+            >
+          </dx-button>
+        </div>
+        <span>ID: {{ selectedTask.id }}</span>
+        <span>Приоритет: {{ selectedTask.priority }}</span>
+        <span>Задача: {{ selectedTask.task }}</span>
+        <span>Дата начала: {{ selectedTask.startDate | date:'dd/MM/yyyy' }}</span>
+        <span>Дата завершения: {{ selectedTask.endDate | date:'dd/MM/yyyy' }}</span>
+        <span>Участники:</span>
+        <div *ngFor="let participant of selectedTask.participants" class="participant-item">
+            id: {{ participant.id }} Имя: {{ participant.name }}
+        </div>
+      </mat-card>
+    </div>    
+</div> 

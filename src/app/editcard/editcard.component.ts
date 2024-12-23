@@ -1,78 +1,127 @@
 import { FormsModule }   from "@angular/forms";
 import { DxDataGridModule, DxButtonModule, DxSelectBoxModule, DxPopupModule, DxDateBoxModule } from 'devextreme-angular';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from "@angular/common"; 
 import { Router } from '@angular/router';
 import { DxTextBoxModule } from 'devextreme-angular';
-// import { DataService } from "../data.service";
-
+import { ActivatedRoute } from '@angular/router';
+import { DataService, Participant, Task } from './../data.service';
+import { NotFoundComponent } from '../not-found/not-found.component';
 @Component({
   selector: 'app-editcard',
   standalone: true,
   imports: [CommonModule, DxButtonModule, DxDataGridModule, FormsModule, DxSelectBoxModule, DxDateBoxModule,
-    DxTextBoxModule, DxPopupModule
+    DxTextBoxModule, DxPopupModule, NotFoundComponent
   ],
+  providers: [DataService],
   templateUrl: './index.editcard.html',
   styleUrls: ['./style.editcard.css']
 })
 
 
-
-export class EditcardComponent {
-  constructor(
-    private router: Router,
-    // private dataService: DataService
-  ) { }
+export class EditcardComponent implements OnInit{
+  task: Task = {
+    id: 0,
+    priority: '',
+    task: '',
+    startDate: new Date(),
+    endDate: new Date(),
+    status: '',
+    participants: []
+  };
   priorities = ['Высокий', 'Средний', 'Низкий'];
   statuses = ['В процессе', 'Выполнено', 'Отложено'];
-  participants = [
-    { id: 1, name: 'Иванов А.С.' },
-    { id: 2, name: 'Петров А.И.' },
-    { id: 3, name: 'Сидоров В.В.' },
-  ];
-  allParticipants = [ // Все возможные участники для поиска
-    { id: 1, name: 'Иванов А.С.' },
-    { id: 2, name: 'Петров А.И.' },
-    { id: 3, name: 'Сидоров В.В.' },
-    { id: 4, name: 'Кузнецов Н.Г.' },
-    { id: 5, name: 'Алексеев М.И.' }
-  ];
-  selectedPriority: string = '';
-  selectedStatus: string = '';
-  taskName: string = '';
-  startDate: Date = new Date('');
-  endDate: Date = new Date('');
-  start_date: Date = new Date();
-  finish_date: Date = new Date();
-  lofff(even:any):void{
-    alert("sdddddddddddddddddd");
-  }
-  ngOnInit(): void{
+  allParticipants: Participant[] = [];
+  task_id: number = 0;
 
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private ds: DataService
+  ) { 
   }
-  async goToHomePage() {
-    await this.router.navigate(['/home'])
+
+  ngOnInit(): void{
+    if (typeof localStorage !== 'undefined') {
+      if (!localStorage.getItem('token')){
+        this.router.navigate(['/auth']);
+      }
+    }
+    this.route.queryParamMap.subscribe(params => {
+      const id = params.get('id');
+      if (id !== null) {
+        this.task_id = +id;
+      } else {
+        console.error('Task ID is null');
+      }
+    });
+    this.getAllParticipants();
+    if (this.task_id!=0){
+      this.ds.getTaskByID(this.task_id).subscribe({
+        next: (data) => {
+          console.log(data);
+          this.task = data;
+        }
+      });
+    }
+  }
+
+  getAllParticipants(){
+    this.ds.getAllParticipants().subscribe((participant) => {
+      this.allParticipants = participant;
+    });
   }
   
   save() {
-    if (!this.start_date || !this.finish_date || this.start_date > this.finish_date) {
+    if (!this.task.startDate){
+      alert('Ошибка: Вы не ввели поле "Дата начала".');
+    } else if (!this.task.endDate){
+      alert('Ошибка: Вы не ввели поле "Дата завершения".');
+    }
+    else if (this.task.startDate > this.task.endDate) {
       alert('Ошибка: Дата начала не может быть позже даты завершения.');
     } 
-    else if (!this.taskName){
+    else if (!this.task.task){
       alert('Ошибка: Вы не ввели поле "Задача".');
     }
-    else if (!this.selectedPriority){
+    else if (!this.task.priority){
       alert('Ошибка: Вы не ввели поле "Приоритет".');
     }
-    else if (!this.selectedStatus){
+    else if (!this.task.status){
       alert('Ошибка: Вы не ввели поле "Статус".');
     }
-    else if (!this.taskName){
-      alert('Ошибка: Вы не ввели поле "Задача".');
+    else if (!this.task.participants){
+      alert('Ошибка: Вы не ввели поле "Участники".');
     }
     else {
-      alert(this.start_date);
-      alert(this.finish_date);
+      if (this.task.id==0){
+        this.ds.addTask(this.task);
+        this.router.navigate([`/home`]);
+      }
+      else {
+        this.ds.updateTask(this.task);
+      }
+    }
+  }
+  
+  cancel(){
+    if (this.task_id==0){
+      this.task = {
+          id: 0,
+          priority: '',
+          task: '',
+          startDate: new Date(),
+          endDate: new Date(),
+          status: '',
+          participants: []
+      }
+    }
+    else {
+      this.ds.getTaskByID(this.task_id).subscribe({
+        next: (data) => {
+          this.task = data;
+        }
+      });
     }
   }
 
@@ -96,27 +145,32 @@ export class EditcardComponent {
   }
 
   addParticipant(participant: any) {
-    if (!this.participants.some(p => p.id === participant.id)) {
-      this.participants.push(participant);
+    if (!this.task.participants.some(p => p.id === participant.id)) {
+      this.task.participants.push(participant);
     }
-    this.isPopupVisible = false;
+  }
+  
+  deleteParticipant(id: number){
+    this.ds.deleteParticipant(id);  
   }
 
   openCreateParticipantPopup() {
     this.isCreateParticipantPopupVisible = true;
+    this.isPopupVisible = false;
     this.newParticipantName = '';
   }
 
   createParticipant() {
     if (this.newParticipantName.trim()) {
       const newParticipant = {
-        id: this.allParticipants.length + 1,
+        id: 0 
+        ? Math.max(...this.allParticipants.map(p => p.id)) + 1 : 1,
         name: this.newParticipantName
       };
-      this.allParticipants.push(newParticipant);
-      this.participants.push(newParticipant);
+      console.log(newParticipant)
+      this.ds.addParticipant(newParticipant);
       this.isCreateParticipantPopupVisible = false;
-      this.isPopupVisible = false;
+      this.openPopup();
     }
   }
 }
